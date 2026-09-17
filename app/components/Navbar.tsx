@@ -1,4 +1,5 @@
 import Link from "next/link"
+import NavLink from "@/app/components/NavLink"
 import PFLogoIcon from "@/public/printforge-logo-icon.svg"
 import PFLogo from "@/public/printforge-logo.svg"
 
@@ -23,11 +24,12 @@ export default function Navbar() {
           </div>
         </Link>
         <ul className="flex items-center gap-2.5">
-          <li className="text-sm uppercase cursor-pointer">
-            <Link href="/3d-models">3D Models</Link>
+          <li>
+            <NavLink href="/3d-models">3D Models</NavLink>
           </li>
-          <li className="text-sm uppercase cursor-pointer">
-            <Link href="/about">About</Link>
+
+          <li>
+            <NavLink href="/about">About</NavLink>
           </li>
         </ul>
       </nav>
