@@ -13,18 +13,24 @@ export default function ModelsLayout({ children }: { children: ReactNode }) {
         <div className="relative">
           <nav className="w-full overflow-x-auto md:overflow-visible scrollbar-hide">
             <ul className="flex px-4 py-3 space-x-4 whitespace-nowrap md:flex-col md:p-0 md:space-x-0 md:space-y-3">
-              <Link
-                href="/3d-models"
-              >
-                All
-              </Link>
-              {categories.map(item => (
+              <li>
                 <Link
-                  href={`/3d-models/categories/${item.slug}`}
-                  key={item.slug}
+                  href="/3d-models"
+                  className="text-gray-800 transition-colors duration-200 hover:text-[#F77D36]"
                 >
-                  {item.displayName}
+                  All
                 </Link>
+              </li>
+
+              {categories.map((item) => (
+                <li key={item.slug}>
+                  <Link
+                    href={`/3d-models/categories/${item.slug}`}
+                    className="text-gray-800 transition-colors duration-200 hover:text-[#F77D36]"
+                  >
+                    {item.displayName}
+                  </Link>
+                </li>
               ))}
             </ul>
           </nav>
