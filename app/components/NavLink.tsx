@@ -1,7 +1,13 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import type { NavLinkProps } from "@/app/types"
 
-export default function NavLink({ href, children, isActive }: NavLinkProps) {
+export default function NavLink({ href, children }: NavLinkProps) {
+  const pathname = usePathname()
+  const isActive = pathname === href
+
   return (
     <Link
       href={href}

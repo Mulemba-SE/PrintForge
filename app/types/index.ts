@@ -59,3 +59,10 @@ export type NavLinkProps = {
   children: React.ReactNode;
   isActive?: boolean;
 };
+
+export type Post = {
+    id: number
+    userId: number
+    title: string
+    body: string
+}
