@@ -25,6 +25,15 @@ export type CategoryPageProps = {
     params: Promise<{
         categoryName: string
     }>
+    searchParams: Promise<{
+        query?: string
+    }>
+}
+
+export type ModelsPageProps = {
+    searchParams: Promise<{
+        query?: string
+    }>
 }
 
 export type RootLayoutProps = Readonly<{
@@ -65,4 +74,9 @@ export type Post = {
     userId: number
     title: string
     body: string
+}
+
+export type SearchFormProps = {
+    action: string
+    defaultValue?: string
 }

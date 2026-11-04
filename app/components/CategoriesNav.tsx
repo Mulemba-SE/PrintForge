@@ -2,8 +2,8 @@ import NavLink from "@/app/components/NavLink"
 import { getAllCategories } from "@/app/lib/categories"
 import type { Category } from "@/app/types"
 
-export default function CategoriesNav() {
-  const categories: Category[] = getAllCategories()
+export default async function CategoriesNav() {
+  const categories: Category[] = await getAllCategories()
 
   return (
     <aside className="sticky top-0 z-10 w-full bg-white border-b border-gray-200 md:fixed md:top-24 md:w-64 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto scrollbar-hide md:border-none">

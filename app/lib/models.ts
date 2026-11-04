@@ -1,35 +1,65 @@
-import modelsData from "../data/models.json"
+import { getDBConnection } from "./db"
 import type { Model } from "../types"
 
 type GetModelsConfig = {
   category?: string
+  query?: string
 }
 
 export async function getAllModels(): Promise<Model[]> {
-  // This is where you'd write code to fetch the list
-  // of models from a database. We're mocking that with
-  // our JSON array of data in models.json for now.
-  return modelsData
+  const db = await getDBConnection()
+  try {
+    return await db.all<Model[]>("SELECT * FROM models ORDER BY id")
+} finally {
+    await db.close()
+  }
 }
 
 export async function getModels(config: GetModelsConfig = {}): Promise<Model[]> {
-  const { category } = config
-  const models = await getAllModels()
+  const { category, query } = config
 
-  if (!category) return models
+  const conditions: string[] = []
+  const params: string[] = []
 
-  return models.filter((model) => model.category === category)
+  if (category) {
+    conditions.push("category = ?")
+    params.push(category)
+  }
+
+  const search = query?.trim()
+  if (search) {
+        const escaped = search.replace(/[\\%_]/g, "\\$&")
+        conditions.push("(name LIKE ? ESCAPE '\\' OR description LIKE ? ESCAPE '\\')")
+        params.push(`%${escaped}%`, `%${escaped}%`)
+    }
+  
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : ""
+  
+  const db = await getDBConnection()
+  try {
+    if (!category) {
+      return await db.all<Model[]>("SELECT * FROM models ORDER BY id")
+    }
+    return await db.all<Model[]>(
+      "SELECT * FROM models WHERE category = ? ORDER BY id",
+      category
+    )
+  } finally {
+    await db.close()
+  }
 }
+
 
 export async function getModelById(id: string | number): Promise<Model> {
-  // These functions don't technically need to be async functions,
-  // but we're planning for the future when they'll be fetching
-  // from a real data source.
-  const foundModel = modelsData.find(
-    (model: Model) => model.id.toString() === id.toString()
-  )
-  if (!foundModel) {
-    throw new Error(`Model with id ${id} not found`)
+  const db = await getDBConnection()
+  try {
+    const model = await db.get<Model>("SELECT * FROM models WHERE id = ?", id)
+    if (!model) {
+      throw new Error(`Model with id ${id} not found`)
+    }
+    return model
+  } finally {
+    await db.close()
   }
-  return foundModel
 }
+

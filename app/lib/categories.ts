@@ -1,19 +1,24 @@
-import categories from "../data/categories.json"
-import { Category } from "../types"
+import { getDBConnection } from './db'
+import { Category } from '../types'
 
-export function getAllCategories(): Category[] {
-    return categories
-}
-
-export function getCategoryBySlug(slug: string): Category {
-    const category = categories.find(c => c.slug === slug)
-    if (!category) {
-        throw new Error(`Category with slug ${slug} not found`)
+export async function getAllCategories(): Promise<Category[]> {
+  const db = await getDBConnection()
+    try {
+        return await db.all<Category[]>(`
+            SELECT slug, name AS displayName FROM categories ORDER BY name
+        `)
+    } finally {
+        await db.close()
     }
-    return category
 }
 
-export function getDisplayNameFromSlug(slug: string): string {
-    const category = getCategoryBySlug(slug)
-    return category.displayName
+export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const db = await getDBConnection()
+    try {
+        return await db.get<Category>(`
+            SELECT slug, name AS displayName FROM categories WHERE slug = ?
+        `, [slug])
+    } finally {
+        await db.close()
+    }
 }
